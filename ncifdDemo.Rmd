@@ -1,0 +1,300 @@
+---
+# YAML header metadata passes options to rmarkdown::render
+#YAML options
+title: "NCIFD R Package Demo"
+author: "A. Powell Wheeler"
+date: "March 24, 2022"
+output:
+  pdf_document:
+    toc: true
+#subtitle: version 1.0.1
+#LATEX options
+geometry: margin=0.25in
+fontsize: 10pt
+urlcolor: blue
+---
+
+```{r setup, eval= TRUE, include=FALSE} 
+#include = FALSE tells R not to print this particular code chunk in the output
+#fontsize = 10 and margin = 0.25 give 114 R console character width (font actually printing 14.25 characters per inch) and formatting consumes 3 of those characters = 111
+#fontsize = 12 and margin = 0.25 give 94 R console character width (font actually printing 11.75 characters per inch) and formatting consumes 3 of those characters = 111
+#fontsize = 10 and margin = 0.5 give 104 R console character width and formatting consumes 3 of those characters = 106
+options(width = 111) #applies to R output, page width is 114 characters, but Rmarkdown gives up 3 characters with it's formatting
+knitr::opts_chunk$set(echo = TRUE) #this line tells knitr to print the code chunks by default
+R_ver <- paste(R.Version()['major'],R.Version()['minor'], sep='.')
+rmarkdown_ver <- packageVersion('rmarkdown')
+knitr_ver <- packageVersion('knitr')
+NCIFD_ver <- packageVersion('NCIFD')
+RStudio_ver <- rstudioapi::versionInfo()$version
+```
+
+# Document Development
+This document was written in Rmarkdown (`r rmarkdown_ver`) on R (`r R_ver`) and rendered on `r format(Sys.time(),"%B %d, %Y at %H:%M")` in RStudio (`r RStudio_ver`) using NCIFD (`r NCIFD_ver`) and knitr (`r knitr_ver`).
+
+<!-- #some janky code to find console width in rendered PDFs -->
+<!-- ```{r include=TRUE} -->
+<!-- paste0(rep('X', 94-9), collapse = "") #94 is total width b/c loses 9 characters due to formatting-->
+<!-- ``` -->
+
+# Introduciton
+## R
+R is the free and open-source programming language that is becoming the standard tool for data analysis, not just in science, but across disciplines. 
+
+## RStudio 
+RStudio is the free and open-source IDE (Integrated Desktop Environment) that is used by 99.99% of R users. It runs R inside of it and has lots of helpful bells and whistles that make using R much easier. RStudio is one of the reasons for the success of R.
+
+Although they are a for-profit company, [RStudio is also Public Benefit Corporation which means they have legally-binding altruistic goals](https://www.rstudio.com/about/what-makes-rstudio-different/) including keeping RStudio free for individual users. [They make money selling and supporting enhanced versions of their free products for industry](https://rviews.rstudio.com/2016/10/12/interview-with-j-j-allaire/), which is a common open-source software business model. Thus, there is no rational basis to fear that, after investing your time in learning R in RStudio, you might have it taken away or somehow be forced to pay for it. 
+
++ RStudio GUI is actually is rendering a web page.  Thus, it looks and works the same across platforms (Windows, MacOS, and Linux) and you could remotely access a powerful RStudio server through your web browser.
++ Dark theme: tools -> global options -> appearance -> Editor Theme. I use Ambiance or Sky.
++ Four panels can be resized or minimized by dragging their frames.
++ Code editor panel can be dragged to a separate monitor. 
++ Tab autocomplete in console
++ Up and Down Arrows to access previous commands
+
+## R Packages 
+R Packages allow R users to easily share functions and data sets with each other. [CRAN](https://cran.r-project.org/), the primary website for downloading R packages currently has [> 18k](https://cran.r-project.org/web/packages/available_packages_by_name.html). R packages are most commonly used to share functions, but they are also useful for data distribution. The main goal of NCIFD is to clean-up and distribute NCWRC data sets among NCWRC staff, but it also stores some functions you may find useful.
+
+# What can a Division R Package Do for Us?
+## Data Sets
+IFD has many relatively small data sets that are relevant outside of a single district but they can be difficult to find because there is no single source for their distribution. In addition, they are typically difficult to use because they are not arranged neatly in a single 2-dimensional data set and/or are very messy. For examples:
+
++ Available through PAWS but exported data is very messy
+  + MTSL (2011-present) - years are separate spreadsheets, difficult to piece together, waterbody names not standardized
+  + WWSL (2011-present) - years are separate spreadsheets and difficult to piece together, waterbody names not standardized
+  + NCARP - can only be downloaded by species groups, freedom units
+  + Coldwater Stocking Trips: no county names, no waterbody names, freedom units, some bad waterbody and county codes, some wrong and missing PMTW classifications, some trips entered twice, water temps in mixed units
++ Fisheries Research with no home on PAWS 
+  + Black Bass Genetics - plus each sample results are separate spreadsheets in differing formats
+  + Wild Trout Distribution
+  + Wild Trout Barriers
++ No Standardized Distribution 
+  + MTSL (2001-2010) - spreadsheets on Deaton's computer
+  + WWSL (2005-2010) - spreadsheets on Deaton's computer
+  + Waterbody Codes from Fish (1968) - only available in print 
+  + Coldwater Stocking Coordinates - spreadsheet on Scott Marsh's computer
+  + County Codes - hatchery version of these codes are on a PDF scan of an old piece of paper
+  + Missing Reports - spreadsheet on Powell's computer
+  + Raleigh Library Contents - spreadsheet on Shauna Glover's computer
+  + Fish Species codes - no single source, PDF scans from throughout the agency, some on PAWS, inconsistencies among sources
+
+## Functions
+We can make R functions to solve IFD problems (like cleaning-up the output from BIODE queries) or share our homebrewed functions inside the Divison.
+
+# NCIFD Introduction
+NCIFD is an R package for the Inland Fisheries Division (IFD) of the North Carolina Wildlife Resources Commission. It contains functions and data sets authored by the staff. The first non-beta version Aggressive Alosid version 1.0.0 was released on 2022-02-08. A 'patch' version 1.0.1 was released recently. Minor releases with new and updated functions and data sets are expected every July (after the spring stockings), November (after the normal fall stockings), and February (after the new MTLSs and WWSLs are finalized).
+
+## Install NCIFD
+NCIFD is distributed from a MS Teams group for IFD R-users. E-mail [Powell Wheeler](mailto:powell.wheeler@ncwildlife.org) if you want access to the shared folder. There are 5 files available after each release: 
+
+1. NCIFD_source.zip contains the source code. Its a zip-compressed directory structure that holds all the files that make the package. 
+2. IntroToNCIFD.pdf is a general overview of the package with installation procedures.
+3. NEWS.pdf is the historical change log and some anticipated future changes.
+4. NCIFD_X.X.X.zip installs NCIFD on MS Windows computers. To install the package in Windows, download and install it through RStudio's menus (Tools -> install.packages). 
+5. NCIFD_X.X.X_R_x86_64-pc-linux-gnu.tar.gz installs NCIFD on a Linux computer. 
+
+## Load Library
+```{r check_install, eval=TRUE, include=TRUE, warning = FALSE}
+library(NCIFD) #the library function makes NCIFD available in R
+path.package('NCIFD') #NCIFD is stored in a directory on your hard drive. library() lets R access that directory.
+```
+
+## Getting Package-wide Help
+NCIFD has package-wide help information that includes information about the project, as well as all the data sets and functions in the package. In RStudio, you can click links to view the specific help information for all the functions and data sets and there are hyperlinks for internet resources also. Everything in the package has useful help information.
+```{r help_NCIFD, eval=FALSE, include=TRUE}
+help(NCIFD) #not run
+```
++ Demonstrate package-wide help(NCIFD) in RStudio
++ Hyperlinks to internet resources
++ Internal Links to detailed information on package functions and data sets.
+
+# NCIFD Contents
+## Data Sets
+The versions in the package have has substantial clean-up and are instantly available in an R session. They are updated with the most recent data when new versions of the package are released.  
+
++ Admin
+    + accountCodes. Contents of the PAWS database of Inland Fisheries Division publications. 
+    + staff. Work contact information for NCWRC employees.
++ NC Information
+    + counties. Code, district, and region information for NC counties.
+    + waterbodies. Waterbody codes from Fish (1968).
+    + fishes. Information on NC fishes including their official NCWRC abbreviations, common names, taxonomy, state and federal status, distribution, and ITIS numbers.
++ Research Resources
+    + afsFishes. Official list of fish names from the AFS.
+    + missingReports. A list of NCWRC publications that are not stored on PAWS. Many are currently lost.
+    + raleighLibrary. Inventory of the IFD and WMD libraries in the Raleigh Office.
+    + reports. Contents of the PAWS database of Inland Fisheries Division publications.
++ Research Projects
+    + blackBassGenetics. Results of the on-going Black Bass Genetics Project.
+    + troutBarriers. Fish movement barriers on NC wild trout streams.
+    + troutDist. Distribution of wild trout in NC.
++ Fishing
+    + ncarp. NCARP awards data base records.
+    + stateRecords. Current NC fishing records.
++ Hatchery System
+    + coldwaterStockingCoords. All the current trout stocking points.
+    + coldwaterStockingTrips. All coldwater stocking records since July 1, 1991.
+    + warmwaterStockingTrips. All warmwater stocking records since 2003 and some older ones back to 1972.
+    + wwsl. All the warmwater fish stocking requests from 2011-present, plus some older entries back to 2005.
+    + mtsl. All the Public Mountain Trout Water fish stocking requests beginning in 2001.
++ Miscellaneous
+    + townCoords. Average GPS coordinates of USA towns and cities.
+    + zipCodeCoords. USPS ZIP Codes and their approximate GPS coordinates.
+
+# Using Package Data Sets
+## Browsing a data set in R
+It's difficult to browse through data in R. This is often bewildering for those coming to R from Excel. Here are several ways to view your data:
+
+1. Just type 'wwsl + ENTER' in the console window. If you type an object name and don't tell R what to do with it, R tries to print it out in the console window. This works for functions also.
+```{r viewWholeData, eval=FALSE, include=TRUE}
+wwsl #did not run. If you don't tell R what to do with something it will try to print to the screen.
+```
+
+```{r headHeadWholeData, eval=TRUE, include=TRUE}
+head(wwsl) #only show top 6 rows. Notice it overflows the screen in this document.
+```
+2.  Use RStudio's Spreadsheet Interface
+```{r viewWithSpreadsheetInterface, eval=FALSE, include=TRUE}
+View(wwsl) #or open in IDE
+```
+3. Export the data set to a CSV file and view it in a spreadsheet program.
+```{r exportDataAsCSV, eval=TRUE, include=TRUE}
+write.csv(wwsl, file = '~/Downloads/troutDist.csv', row.names = FALSE) 
+list.files('~/Downloads', 'trout.+csv', full.names = TRUE)
+```
+4). NCIFD also has three functions that help browse data: dfScan(), dfCols(), dfSlim(), and ferret(). We'll look at those with the package functions. 
+
+## Help for data sets
+Help information for package data sets contains all the metadata that you need to understand the data.
+```{r help_troutDist, eval=FALSE, include=TRUE}
+help(troutDist) #not run
+```
+
++ format 
+  + data.frame: 2-dimensional data (like a spreadsheet)
+  + number of rows and columns
+  + column contents
++ author - who did the R coding to get it in the package (Powell)
++ source
+  + person overseeing the data (Jake)
+  + when updated
++ examples - not very useful for data sets
+  
+## Data Sets Depend Each Other
+The data sets in {NCIFD} often integrate information from each other. For example, 'warmaterStockingTrips' contains numeric codes for county names and uses 'counties' to decode them (e.g., 944 = Haywood). In addition, it uses 'fishes' to decode species codes into species names and 'waterbodies' and 'wwsl' to convert waterbody codes into waterbody names (Figure 1).
+
+!['warmwaterStockingTrips' pulls information from 'wwsl', 'counties', 'fishes', and 'waterbodies'. In turn, 'wwsl' is built in part from 'fishes' and 'counties' and 'waterbodies' integrates information from 'wwsl' and 'mtsl'.](pic/flowChart_onlyDataSets.png)
+
+## Data Sets in the Source Code
+
++ Use coldwaterStockingTrips as an example
++ NCIFD/data-raw
+  + R scripts that clean-up the data and save it 
++ NCIFD/data
+  + Data sets in R *.rda format
++ NCIFD/R
+  + Help Information coded in Roxygen2
++ NCIFD/tests
+  + Automated testing
+  + Package has too many interconnected parts to check everything all the time
+  + Sometimes find detect problems in the raw data, especially if hand-keyed
+
+## Uses of NCIFD Data: Graphs
+
++ July PMTW Water Temperatures
+  + temps.july.script.r
++ Trout Stocking Requests and Results by Stream
+  + stockingByWaterbodyByYear.R
++ Trout Harchery Requests and Output
+  + totalHatcheryOutput.R
+
+## Functions
+Some of the functions have specific IDF uses such as cleanBIODE(), relativeWeight(), standardWeight() and others were created to help with specific research projects. In addition, there are other functions (that are not listed here) which are used to help build the package.
+
++ cleanBIODE() cleans-up MS Excel files produced when querying the BIODE database in PAWS.
++ flow() calculates stream flow from interval velocity and depth measurements.
++ ordinalDate() assigns ordinal dates (1:365).
++ Basic Statistics
+  + movingAverage() calculates moving average.
+  + quick2Sample() two-sample inferential tests (t- and z-tests) for summarized data.
++ Fisheries Statistics
+  + relativeWeight() calculates fish relative weight.
+  + standardWeight() calculates fish standard weight.
+  + Z2A() converts instantaneous mortality rate (Z) to annual mortality rate (A) along with the SE and calculates CIs.
++ Console Tools
+  + dfCols() displays information about the columns in a data.frame including their class and address.
+  + dfScan() views an evenly distributed subset of the rows in a data.frame.
+  + dfSlim() views only as many data.frame columns as will fit cleanly across your console window.
+  + ferret() finds rows in a data.frame which have a match for one or more search terms.
+  + fruitSalad() creates a data.frame with information about fictitious salads.
+  + reveal() reveals the libraries and objects that are active in your workspace.
++ Unit Conversion Functions: ac2ha(), c2f(), cubft2cubm(), cubft2gal(), cubm2cubft(), deg2rad(), f2c(), ft2m(), g2lb(), gal2cubft(), ha2ac(), in2mm(), kg2lb(), km2mi(), lb2g(), lb2kg(), m2ft(), mi2km(), mm2in(), rad2deg().
+
++ NCIFD Development (Figure 2)
+  + addZeros() adds zeros to the start or end of a string. Replaces zeros that were lost when spreadsheets treat an identifier, such as a PIT tag number, like a number and drop leading and trailing zeros.
+  + lake2End() if a waterbody name starts with 'Lake', move it to the end of the name.  So, 'Lake Fontana' becomes 'Fontana Lake'.
+  + stringCleaning() corrects a universe of bad formatting often found in notes columns and decodes > 100 common IFD abbreviations.
+  + wordFreq() finds the frequencies of words (by looking for spaces) in a vector or data.frame column. Its helps check the preformance of stringCleaning().   
+![NCIFD functions that are used to build the package data sets are shown in red.](pic/flowChart_datasetsAndFunctions.png)
+
+## cleanBIODE()
+Cleans-up EXCEL files exported from BIODE queries. 
+```{r cleanBIODE, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx') #makes an object in your R Session
+cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx', writeFiles=TRUE) #cleans-up and saves as CSV files on HDD
+```
+
+## standardWeight() and relativeWeight()
+Calculate condition for 47 NC fishes
++ relativeWeight() uses standardWeight()
++ alises:  ws(), wr() 
++ species info in hidden data.frame: NCIFD:::wsLookup
+  + some species have multiple equations
+    + NC Bias
++ references in help(standardWeight)
+
+```{r cleanBIODE, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx') #makes an object in your R Session
+cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx', writeFiles=TRUE) #cleans-up and saves as CSV files on HDD
+```
+
+
+
+## ferret()
+
+1. Is Charles D Owen still getting winter pond stockings?
+```{r ferret01, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+ferret(coldwaterStockingTrips, 'charles')
+```
+
+2. You jerks only stocked Big Snowbird HS once all last year.
+```{r ferret02, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+ferret(coldwaterStockingTrips, c('snowbird', '2021')) #search for two strings at once with c()
+```
+
+3. When are Striped Bass typically stocked in Lake Hiwassee?
+```{r ferret03, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+ferret(warmwaterStockingTrips, c('sb', 'hiwassee')) #search for multiple strings at once with c()
+```
+
+4. Find all of David Yow’s Creel Reports
+```{r ferret04, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+ferret(reports, c('Yow', 'creel')) #search for multiple strings at once with c()
+```
+
+5. What months are Bear, Cedar Cliff, Wolf and Tanassee Stocked?
+```{r ferret05, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+ferret(mtsl, 'bear|cedar cliff|wolf|tanassee') #do an OR search with pipe symbol | 
+```
+
+6. What data do you have from Calderwood, Santeetlah, Cheoah, and Emory reservoirs?
+```{r ferret06, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+ferret(reports, 'Calderwood|Santeetlah|Cheoah|Emory') #do an OR search with pipe symbol | 
+```
+
+7. When are Walleye normally stocked?
+```{r ferret07, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+ferret(warmwaterStockingTrips, 'wy') #problem: finds 'wy' in notes "hwy"
+#try exact matching
+ferret(warmwaterStockingTrips, c('WY'), exact = TRUE) #notice case sensitive
+```
