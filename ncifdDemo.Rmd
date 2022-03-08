@@ -235,32 +235,81 @@ Some of the functions have specific IDF uses such as cleanBIODE(), relativeWeigh
   + lake2End() if a waterbody name starts with 'Lake', move it to the end of the name.  So, 'Lake Fontana' becomes 'Fontana Lake'.
   + stringCleaning() corrects a universe of bad formatting often found in notes columns and decodes > 100 common IFD abbreviations.
   + wordFreq() finds the frequencies of words (by looking for spaces) in a vector or data.frame column. Its helps check the preformance of stringCleaning().   
+
 ![NCIFD functions that are used to build the package data sets are shown in red.](pic/flowChart_datasetsAndFunctions.png)
 
 ## cleanBIODE()
-Cleans-up EXCEL files exported from BIODE queries. 
+Cleans-up EXCEL files exported from BIODE queries.
 ```{r cleanBIODE, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx') #makes an object in your R Session
 cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx', writeFiles=TRUE) #cleans-up and saves as CSV files on HDD
 ```
 
-## standardWeight() and relativeWeight()
-Calculate condition for 47 NC fishes
-+ relativeWeight() uses standardWeight()
-+ alises:  ws(), wr() 
+## standardWeight()
+Calculates standard weight of 47 NC fishes
+
++ alias: ws()
 + species info in hidden data.frame: NCIFD:::wsLookup
   + some species have multiple equations
-    + NC Bias
+    + Defaults to most useful in NC (BKT) or most general (MKY)
 + references in help(standardWeight)
++ tested against published and known values - NCIFD/tests/testthat/test_condition.R
 
-```{r cleanBIODE, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
-cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx') #makes an object in your R Session
-cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx', writeFiles=TRUE) #cleans-up and saves as CSV files on HDD
+```{r standardWeight, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+standardWeight('BKT', 150) #defaults to eq='A' (Harris et al. 2021); SABKT are skinnier
+standardWeight('BKT', 150, eq='B') #eq='B' selects Hyatt and Hubert (2001)
+standardWeight('BKT', 100) #Harris et al. (2021) works down to 80 mm TL
+standardWeight('BKT', 100, eq='B') #Hyatt and Hubert (2001) returns a NA when < 120 mm TL
+ws('BKT', 150) #ws() is an alias for standardWeight()
 ```
 
+## relativeWeight()
+Calculates relative weight of 47 NC fishes
+
++ you can skip calculating Ws and get Wr directly
++ uses standardWeight()
++ alias: wr()
++ tested against published and known values - NCIFD/tests/testthat/test_condition.R
+
+```{r relativeWeight, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+relativeWeight('BKT', 150, 32.7) #relative weight also accepts fish TL. It calls standardWeight() internally.
+relativeWeight('BKT', 150, 32.7, eq='B')
+wr('BKT', 150, 32.7) #wr is an alias for relativeWeight()
+```
+
+## Z2A()
+Quickly convert an instantaneous mortality rate (Z) to an annual mortality rate (A). Also, converts the standard error and bootstraps confidence intervals with the gamma distribution (Bolker 2008).
+
+```{r Z2A, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+Z2A(0.69) #no SE specified
+Z2A(0.69, 0.1) #with SE; defaults to 95% CIs
+Z2A(0.69, 0.1, 0.99) #with SE and custom CI
+```
+
+## Data.frame viewing functions
+NCIFD contains several data sets, most of which are 2-dimensional data.frames. Because viewing data in R can be difficult, the package contains three functions that can help with that.
+
+1. dfCols(): shows a summary of what is contained in the data.frame columns.
+
+```{r dfCols, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+dfCols(zipCodeCoords) #no SE specified
+```
+
+2. dfScan(): shows X number of evenly-spaced rows in a data.frame, including the first and last.
+
+```{r dfScan, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+dfScan(afsFishes, 10) #no SE specified
+```
+
+3. dfSlim(): drops the right-side columns that won't fit on your screen to prevent wrap-around.
+
+```{r dfSlim, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+dfSlim(head(coldwaterStockingTrips)) #no SE specified
+```
 
 
 ## ferret()
+Searches data.frames for strings and returns the rows that have matches. It is designed to quickly pull up information in NCIFD data.frames. With some pacakge familiarity and practice, you can use it while talking to anglers on the phone. By default, it finds case-insnesitive partial matches. For example, searching for 'WY' will match 'wy' and 'hwy'. However, if exact=TRUE, 'WY' will only match 'WY'. Here's some examples of how I've used it:
 
 1. Is Charles D Owen still getting winter pond stockings?
 ```{r ferret01, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
@@ -284,17 +333,31 @@ ferret(reports, c('Yow', 'creel')) #search for multiple strings at once with c()
 
 5. What months are Bear, Cedar Cliff, Wolf and Tanassee Stocked?
 ```{r ferret05, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
-ferret(mtsl, 'bear|cedar cliff|wolf|tanassee') #do an OR search with pipe symbol | 
+ferret(mtsl, 'bear|cedar cliff|wolf|tanassee') #do an OR search with pipe symbol |; only works with exact=FALSE
 ```
 
 6. What data do you have from Calderwood, Santeetlah, Cheoah, and Emory reservoirs?
 ```{r ferret06, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
-ferret(reports, 'Calderwood|Santeetlah|Cheoah|Emory') #do an OR search with pipe symbol | 
+ferret(reports, 'Calderwood|Santeetlah|Cheoah|Emory') #do an OR search with pipe symbol |; only works with exact=FALSE
 ```
 
 7. When are Walleye normally stocked?
 ```{r ferret07, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 ferret(warmwaterStockingTrips, 'wy') #problem: finds 'wy' in notes "hwy"
 #try exact matching
-ferret(warmwaterStockingTrips, c('WY'), exact = TRUE) #notice case sensitive
+ferret(warmwaterStockingTrips, 'WY', exact = TRUE) #notice case sensitive
 ```
+
+## ordinalDate()
+Convert dates into ordinal dates. For example, "2008-01-01" becomes 1 and "2000-01-02" becomes 2. This is useful for creating a common Jan-Dec x-axis when plotting multiple years of a time-series. R date format returns integers and POSIXct dates return decimal numbers. 
+```{r ordinalDate, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+#R Date Format
+ordinalDate(as.Date(c("1/1/2000", "07/01/1999", "12/31/1970"), format = '%m/%d/%Y'))
+#POSIXct date and time format
+dates <- c('2020-02-28 12:00:00', '2020-02-29 12:00:00', '2020-03-01 12:00:00')
+ordinalDate(as.POSIXct(dates, tz = 'GMT+5'))
+```
+![Daily flows on the Davidson River showing hurricane flows. ordinalDate() was used to create a common (1-365) x-axis for each year before the axis labels (months) were overlain.](pic/allFlow.png)
+
+
+
