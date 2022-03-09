@@ -206,7 +206,7 @@ Run scripts for automation/reproducability with coldwaterStockingTrips
 + Trout Harchery Requests and Output
   + totalHatcheryOutput.R
 
-# Functions
+# {NCIFD} Functions
 {NCIFD} contains a variety of functions. Some of the functions have specific IDF uses such as cleanBIODE(), relativeWeight(), standardWeight(), others were created to help with specific research projects, and others help build the package.
 
 + cleanBIODE() cleans-up MS Excel files produced when querying the BIODE database in PAWS.
@@ -304,7 +304,7 @@ dfSlim(head(coldwaterStockingTrips)) #used head() to only print first six rows
 
 4. ferret(): searches data.frames for strings and returns the rows that have matches. It is designed to quickly find information in {NCIFD} data.frames. With some package familiarity and practice, you can use it while talking to anglers on the phone. By default, it finds case-insensitive partial matches. For example, searching for 'WY' will match 'wy', 'wY', and 'hwy'. However, if exact=TRUE, 'WY' will only match 'WY'. Here's some examples of how I've used it:
 
- + Is Charles D Owen still getting winter pond stockings?
+ + Is Charles D. Owen Pond still getting winter pond stockings?
 ```{r ferret01, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 ferret(coldwaterStockingTrips, 'charles')
 ```
@@ -351,6 +351,15 @@ dates <- c('2020-02-28 12:00:00', '2020-02-29 12:00:00', '2020-03-01 12:00:00')
 ordinalDate(as.POSIXct(dates, tz = 'GMT+5'))
 ```
 ![Daily flows on the Davidson River showing hurricane flows. ordinalDate() was used to create a common (1-365) x-axis for each year before the labels (months) were overlain.](pic/allFlow.png)
+
+# Conclusion
+R is exposing us to a world of new tools which increase our ability to use and manage our own data. A Division R package is something that we can build and develop ourselves to improve and share data sets internally. In addition, we can build functions to accomplish common tasks and share those in the package also. This relatively new technology allows us to handle some problems that pervoiusly required professional IT support. Ultimately, {NCIFD} is and will be developed by field staff and it may help us cooperate and collaborate laterally across geographic divisions.
+
+# Post Script
+btw, R is also a stat's package.
+
+
+
 
 
 
