@@ -45,35 +45,34 @@ RStudio_ver <- rstudioapi::versionInfo()$version
 ## RStudio 
 RStudio is a company that makes a free and open-source program for R which is also called RStudio. RStudio (program) is an Integrated Desktop Environment that runs R inside of it and has a terrific code editor and many other features that make R easier to use. The Rstudio IDE is used by about 99.99% of R users. RStudio (company) also produces a series of packages for R that are collectively known as the 'tidyverse' which also make R easier. RStudio and its products are reasons for the success of R.
 
-Although it is a for-profit company, [RStudio is a Public Benefit Corporation with legally-binding altruistic goals](https://www.rstudio.com/about/what-makes-rstudio-different/) including keeping RStudio free for individual users. [They make money by selling and supporting enhanced versions of their free products for industry](https://rviews.rstudio.com/2016/10/12/interview-with-j-j-allaire/), which is a common open-source software business model. Thus, there is no rational basis to fear that after investing your time learning RStudio, it might be taken away or you will be forced to pay for it. Open-source software enthusiasts tend to be [suspicious](https://en.wikipedia.org/wiki/Embrace,_extend,_and_extinguish) when [big corporations](https://en.wikipedia.org/wiki/Halloween_documents) get involved in open-source software, but no one is worried about RStudio.   
+Although it is a for-profit company, [RStudio is a Public Benefit Corporation with legally-binding altruistic goals](https://www.rstudio.com/about/what-makes-rstudio-different/) including keeping RStudio free for individual users. [They make money by selling and supporting enhanced versions of their free products for industry](https://rviews.rstudio.com/2016/10/12/interview-with-j-j-allaire/), which is a common open-source software business model. Open-source software enthusiasts tend to be [suspicious](https://en.wikipedia.org/wiki/Embrace,_extend,_and_extinguish) when [big corporations](https://en.wikipedia.org/wiki/Halloween_documents) get involved in open-source software, but no one is worried about RStudio. Thus, there is no rational basis to fear that after investing your time learning R in RStudio, it might be taken away or you will be forced to pay for it.   
 
 + RStudio renders a web page on your screen. Thus, it looks and works the same across platforms (Windows, MacOS, and Linux) and you can access a powerful remote RStudio server through your web browser.
-+ Dark themes are available. tools -> global options -> appearance -> Editor Theme. I use Ambiance or Sky.
-+ Four panels can be resized or minimized by dragging their frames.
++ Dark themes are available. tools -> global options -> appearance -> Editor Theme. I like Ambiance and Sky.
++ Rstudio splits the screen into four panels can be resized or minimized by dragging their frames.
 + Code editor panel can be dragged to a separate monitor. 
 + Tab auto-complete works in the console.
 + Up and down arrows access the command history in the console.
-+ If you haven't upgraded your computer screen in a while, now is a good time. 1080p FHD screens are old (> 8 y) technology and the extra screen real estate will help with RStudio.
 
 ## R Packages 
 R packages allow R users to share two things with each other: 1) functions and 2) data sets. [CRAN](https://cran.r-project.org/), the primary website for downloading R packages currently hosts over [> 18k](https://cran.r-project.org/web/packages/available_packages_by_name.html). Although R packages are typically downloaded from CRAN, they are stand-alone files and can be distributed in a variety of ways. R packages are most commonly used for sharing functions but they are also useful for data distribution. 
 
-# IFD Data Problems
-The Inland Fisheries Division (IFD) has many relatively small (by R standards) data sets that are useful outside of a single district but are often difficult to find because they are scattered throughout the Division and Agency and there is no single source for their distribution. In addition, the data sets are typically difficult to use because they are not arranged neatly in a single spreadsheet and/or are very messy. For examples:
+# Division Data Problems
+The Inland Fisheries Division (IFD) has many relatively small (by R standards) data sets that are useful outside of a single district but are often difficult to find because they are scattered throughout the Division and Agency. In addition, the data sets are typically difficult to use because they are not arranged neatly in a single spreadsheet and/or are very messy. For examples:
 
 + Some data is available through PAWS but the exported data is very messy and requires arduous clean-up before it is usable.
-   + MTSL (2011-present) - years are separate spreadsheets and difficult to piece together. Waterbody names are not standardized.
-   + WWSL (2011-present) - years are separate spreadsheets and difficult to piece together. Waterbody names are not standardized.
-   + NCARP - Query-able only by species groups. Freedom units only.
-   + Coldwater Stocking Trips - No county names, no waterbody names, freedom units, some bad waterbody and county codes, some wrong and missing PMTW classifications, some trips entered twice, water temps in mixed units.
-   + Warmwater Stocking Trips - No county names, no waterbody names, freedom units, some bad waterbody and county codes, water temps in mixed units.
+   + MTSL (2011–present) - years are separate spreadsheets and difficult to piece together, waterbody names are not standardized.
+   + WWSL (2011–present) - years are separate spreadsheets and difficult to piece together, waterbody names are not standardized.
+   + NCARP - Query-able only by species groups, freedom units only.
+   + Coldwater Stocking Trips - no county names, no waterbody names, freedom units, some bad waterbody and county codes, some wrong and missing PMTW classifications, some trips entered twice, water temps in mixed units.
+   + Warmwater Stocking Trips - no county names, no waterbody names, freedom units, some bad waterbody and county codes, water temps in mixed units.
 + Data from on-going fisheries research projects have no home on PAWS. 
    + Black Bass Genetics - genetic results are spread across many spreadsheet files with inconsistant formatting.
    + Wild Trout Distribution
    + Wild Trout Barriers
 + Other data sets have no distribution 
-   + MTSL (2001-2010) - spreadsheets on Deaton's computer
-   + WWSL (2005-2010) - spreadsheets on Deaton's computer
+   + MTSL (2001–2010) - spreadsheets on Deaton's computer
+   + WWSL (2005–2010) - spreadsheets on Deaton's computer
    + Waterbody Codes - full collection is only available in print (Fish 1968)
    + Coldwater Stocking Coordinates - spreadsheet on Scott Marsh's computer
    + County Codes - PDF scan of an old piece of paper on Scott Marsh's computer
@@ -82,39 +81,43 @@ The Inland Fisheries Division (IFD) has many relatively small (by R standards) d
    + Fish Species Codes - no definitive source. PDFs are found throughout the agency and some of the codes are used in PAWS. There are some inconsistencies among sources and not all fish species have a code. Codes are used by Fisheries Management not by Aquatic Wildlife Diversity.
 
 # Introduction to {NCIFD}
-{NCIFD} is an R package for the Inland Fisheries Division of the North Carolina Wildlife Resources Commission (NCWRC). The main goal of {NCIFD} is to increase the availability and usefulness of Agency and Division data among IFD staff, but it stores some functions also. The first non-beta version 1.0.0 'Aggressive Alosid' was released on 2022-02-08 and a 'patch' version 1.0.1 was released recently. Releases with new and updated functions and data sets are expected three times per year at natural breaks in data collection: 1) February (after the new MTLSs and WWSLs are finalized), 2) July (after the spring stockings), and 3) November (after the normal fall stockings). 
+{NCIFD} is an R package for the Inland Fisheries Division of the North Carolina Wildlife Resources Commission (NCWRC). The main goal of {NCIFD} is to increase the availability and usefulness of Agency and Division data among IFD staff, but it stores some functions also. The first non-beta version 1.0.0 'Aggressive Alosid' was released on 2022-02-08 and a 'patch' version 1.0.1 was on 2022-03-11. Releases with new and updated functions and data sets are expected three times per year at natural breaks in data collection:
+
+1. February (after the MTLS and WWSL are finalized)
+2. July (after spring stockings)
+3. November (after fall stockings)
 
 ## Install
-{NCIFD} is just for IFD use and distributed from a MS Teams group for IFD R-users. E-mail [Powell Wheeler](mailto:powell.wheeler@ncwildlife.org) if you want access to the shared folder. There are 5 files available after each release: 
+{NCIFD} is only for Division use and distributed from a MS Teams group for IFD R-users. E-mail [Powell Wheeler](mailto:powell.wheeler@ncwildlife.org) if you want access to the shared folder. There are five files available after each release:
 
-1. NCIFD_source.zip contains the source code. Its a zip-compressed directory structure that holds all the files that build the package. 
+1. NCIFD_source.zip contains the source code.
 2. IntroToNCIFD.pdf is a general overview of the package.
 3. NEWS.pdf is the historical change log with some anticipated future changes.
-4. **NCIFD_X.X.X.zip installs NCIFD on MS Windows computers.** To install the package in Windows, download and install it through RStudio's menus (Tools -> install.packages). 
-5. NCIFD_X.X.X_R_x86_64-pc-linux-gnu.tar.gz installs NCIFD on a Linux computer. 
+4. **NCIFD_X.X.X.zip installs NCIFD on MS Windows computers.** To install the package in Windows, download and install it through RStudio's menus (Tools -> install.packages).
+5. NCIFD_X.X.X_R_x86_64-pc-linux-gnu.tar.gz installs NCIFD on a Linux computer.
 
 ## Load Library
 ```{r check_install, eval=TRUE, include=TRUE, warning=FALSE}
 library(NCIFD) #the library function makes NCIFD available in R
-path.package('NCIFD') #NCIFD is a directory on your hdd. library() allows R to access the directory.
+path.package('NCIFD') #library() allowed R to access the NCIFD package directory.
 ```
 
 ## Getting Help
-{NCIFD} has package-wide help that includes information about the project, as well as all the data sets and functions in the package. In RStudio, you can click links to view the specific help information for all the functions and data sets and there are hyperlinks to internet resources. 
+{NCIFD} has package-wide help that includes information about the project, as well as all the data sets and functions in the package. In RStudio, you can click links to view the specific help information for all the functions and data sets and there are hyperlinks to internet resources.
 ```{r help_NCIFD, eval=FALSE, include=TRUE}
 help(NCIFD) #not run
 ```
 
-Demonstrate package-wide help(NCIFD) in RStudio
+_Demonstration_: package-wide help(NCIFD) in RStudio
 
 + Hyperlinks to internet resources.
 + Internal Links to detailed information on package functions and data sets.
 
 # {NCIFD} Data Sets
-Although the data sets in the package are often available elsewhere in the Agency, the versions in the package are substantially improved and are instantly available in an R session. The data sets are updated when new versions of the package are released. It only takes about half a worker-day to update all the data, re-build the package, and release a new version. The data sets are all R data.frames which are 2-dimensional with rows and columns like a spreadsheet.  
+Although the data sets in the package are often available elsewhere in the Agency, the versions in the package are substantially improved and are instantly available in an R session. The data sets are updated when new versions of the package are released. It only takes about half a worker-day to update all the data, re-build the package, and release a new version. The data sets are all R data.frames which are 2-dimensional and have rows and columns like a spreadsheet.
 
 + Admin
-  + accountCodes; NCWRC-simplified version of the State of NC chart of accounts. 
+  + accountCodes; NCWRC-simplified version of the State of NC chart of accounts.
   + staff; publicly-available work contact information for NCWRC employees.
 + NC Information
   + counties; code, district, and region information for NC counties.
@@ -124,7 +127,7 @@ Although the data sets in the package are often available elsewhere in the Agenc
   + afsFishes; official list of fish names from AFS.
   + missingReports; known NCWRC publications that are not available on PAWS. Some missing reports are being acquired but others are currently lost.
   + raleighLibrary; the > 3,300 items available in the IFD and WMD libraries in the Raleigh Office.
-  + reports; contents of the PAWS database of IFDivision publications.
+  + reports; contents of the PAWS database of IFD publications.
 + Research Projects
   + blackBassGenetics; results of the on-going Black Bass Genetics Project.
   + troutBarriers; fish movement barriers on NC wild trout streams.
@@ -136,16 +139,16 @@ Although the data sets in the package are often available elsewhere in the Agenc
   + coldwaterStockingCoords; current trout stocking points.
   + coldwaterStockingTrips; coldwater stocking records since July 1, 1991.
   + warmwaterStockingTrips; warmwater stocking records since 2003 and some older ones back to 1972.
-  + wwsl; warmwater fish stocking requests from 2011-present, plus some older entries back to 2005.
+  + wwsl; warmwater fish stocking requests from 2011–present, plus some older entries back to 2005.
   + mtsl; trout stocking requests beginning in 2001.
 + Other
-  + townCoords; average GPS coordinates of USA towns and cities.
+  + townCoords; GPS coordinates of USA towns and cities.
   + zipCodeCoords; USPS ZIP Codes and their approximate GPS coordinates.
 
 ## Browsing Data in R
 Browsing data is difficult in R, which can be disorientating for those coming from Excel. Here are several ways to view data:
 
-1. Type 'wwsl + ENTER' in the console window. If you enter a data set name and don't tell R what to do with it, R will print it to the screen. 
+1. Type 'wwsl + ENTER' in the console window. If you enter a data set name and don't tell R what to do with it, R will print it to the screen.
 ```{r viewWholeData, eval=FALSE, include=TRUE}
 wwsl #did not run.
 ```
@@ -159,36 +162,36 @@ View(wwsl) #or open from the IDE
 ```
 3. Export the data set to a CSV file and view it in a spreadsheet program.
 ```{r exportDataAsCSV, eval=TRUE, include=TRUE}
-write.csv(wwsl, file = '~/Downloads/troutDist.csv', row.names = FALSE) 
+write.csv(wwsl, file = '~/Downloads/troutDist.csv', row.names = FALSE)
 ```
-4). {NCIFD} also has four functions that help browse data: dfScan(), dfCols(), dfSlim(), and ferret(). See [Data.frame Viewing Functions] below. 
+4). {NCIFD} has four functions that help browse data: dfScan(), dfCols(), dfSlim(), and ferret(). See [Data.frame Viewing Functions] below.
 
 ## Help for Data Sets
 Help information for package data sets contains all the metadata that you need to understand the data.
 ```{r help_troutDist, eval=FALSE, include=TRUE}
 help(troutDist) #not run
 ```
-
-+ Format 
++ Description
++ Format
   + Data.frame: 2-dimensional data (like a spreadsheet)
   + Number of rows and columns
   + Column contents
 + Author - who did the R coding to get it in the package (Powell)
 + Source
   + Person in charge of the data (Jake)
-  + Last update 
+  + Last update
   + Examples - not very useful for data sets
- 
-## Data Sets Are Interconnected
-The data sets in {NCIFD} often aggregate information from each other (Figure 1). For example, 'warmaterStockingTrips' contains numeric codes for counties and uses the 'counties' data set to decode them (e.g., 944 = Haywood). 'counties' is also used to assign district numbers to the trips (Haywood = 9). In addition, 'warmaterStockingTrips' uses 'fishes' to decode species codes into species names and 'waterbodies' and 'wwsl' to convert waterbody codes into waterbody names. R's ability to merge data from other data sets is more powerful than lookup functions in Excel and less powerful than relational databases.
 
-!['warmwaterStockingTrips' pulls information from 'wwsl', 'counties', 'fishes', and 'waterbodies'. In turn, 'wwsl' is built in part from 'fishes' and 'counties' and 'waterbodies' integrates information from 'wwsl' and 'mtsl'.](pic/flowChart_onlyDataSets.png)
+## Data Sets are Interconnected
+The data sets in {NCIFD} often aggregate information from each other (Figure 1). For example, 'warmaterStockingTrips' contains numeric codes for counties and uses the 'counties' data set to decode them (e.g., 944 = Haywood). 'counties' is also used to assign district numbers to the trips (Haywood = 9). In addition, 'warmaterStockingTrips' uses 'fishes' to decode species codes into species names and 'waterbodies' and 'wwsl' to convert waterbody codes into waterbody names. R's ability to merge data from other data sets is similar to databases and more powerful than lookup functions in Excel.
+
+!['warmwaterStockingTrips' pulls information from 'wwsl', 'counties', 'fishes', and 'waterbodies'. In turn, 'wwsl' is built in part from 'fishes' and 'counties', and 'waterbodies' integrates information from 'wwsl' and 'mtsl'.](pic/flowChart_onlyDataSets.png)
 
 ## Source Code For Data Sets
 Example: coldwaterStockingTrips components in the source code.
 
 + NCIFD/data-raw
-  + R scripts that clean-up the data and save it 
+  + R scripts that clean-up the data and save it
 + NCIFD/data
   + Data sets in *.rda format
 + NCIFD/R
@@ -199,7 +202,7 @@ Example: coldwaterStockingTrips components in the source code.
   + May detect problems in the raw data, especially if hand-keyed
 
 ## Uses of NCIFD Data: Graphs
-Demonstrate: automation/reproducibility with coldwaterStockingTrips
+_Demonstration_: graphs with coldwaterStockingTrips
 
 + July PMTW Water Temperatures
   + temps.july.script.r
@@ -222,38 +225,67 @@ Demonstrate: automation/reproducibility with coldwaterStockingTrips
   + Z2A(); converts instantaneous mortality rate (Z) to annual mortality rate (A) along with the SE and calculates CIs.
 + Other Research Tools
   + flow(); calculates stream flow from interval velocity and depth measurements.
-  + ordinalDate(); assigns ordinal dates (1:365).
+  + ordinalDate(); assigns ordinal dates (1–365).
 + Console Tools
   + dfCols(); displays information about the columns in a data.frame.
   + dfScan(); views an evenly distributed subset of the rows in a data.frame.
   + dfSlim(); views only as many data.frame columns as will fit cleanly across your screen.
   + ferret(); finds rows in a data.frame which have a match for one or more search terms.
-  + fruitSalad(); creates a data.frame with X rows of randomized information about fictitious salads for testing R code. 
+  + fruitSalad(); creates a data.frame with X rows of randomized information about fictitious salads for testing R code.
   + reveal(); reveals the libraries and objects that are active in your R session.
 + Unit Conversion Functions: ac2ha(), c2f(), cubft2cubm(), cubft2gal(), cubm2cubft(), deg2rad(), f2c(), ft2m(), g2lb(), gal2cubft(), ha2ac(), in2mm(), kg2lb(), km2mi(), lb2g(), lb2kg(), m2ft(), mi2km(), mm2in(), rad2deg().
 + Functions for {NCIFD} Development (Figure 2)
   + addZeros() adds zeros to the start or end of a string. Replaces zeros that were lost when spreadsheets treat an identifier, such as a PIT tag number, like a number and drop leading and trailing zeros.
   + lake2End() if a waterbody name starts with 'Lake', move it to the end of the name. So, 'Lake Fontana' becomes 'Fontana Lake'.
   + stringCleaning() corrects a universe of bad formatting often found in IFD 'notes' and 'comments' columns and decodes > 100 common abbreviations.
-  + wordFreq() finds the frequencies of words data.frame column. It helps check the preformance of stringCleaning().  
-  
+  + wordFreq() finds the frequencies of words data.frame column. It helps check the preformance of stringCleaning().
+
 ![{NCIFD} functions help build the package data sets are shown in red.](pic/flowChart_datasetsAndFunctions.png)
 
-## cleanBIODE()
+## Help for Functions
+
+Help information for package functions contains all the metadata that you need to understand the data.
+```{r help_standardWeight, eval=FALSE, include=TRUE}
+help(standardWeight) #not run
+```
+
++ Description - what the function does
++ Arguments - information the function needs
++ Value - what the function outputs
++ Author - who did the R coding
++ Examples - how to use the function
++ Other Info
+  + Warning
+  + Note
+  + Fishes with Multiple Standard Weight Equations
+  + References
+
+## Source Code For Functions
+Example: standardWeight() in test_condition.R in the source code.
+
++ NCIFD/R
+  + Function and Help Information (coded in Roxygen2)
++ NCIFD/tests
+  + Automated testing
+  + Check against published and known values
+
+## Function Examples
+
+### cleanBIODE()
 Cleans-up EXCEL files exported from PAWS BIODE queries.
 ```{r cleanBIODE, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx') #makes an object in your R Session
 cleanBIODE('~/Downloads/BiodeQuery03-07-22.xlsx', writeFiles=TRUE) #cleans-up and saves as CSV files on HDD
 ```
 
-## standardWeight()
+### standardWeight()
 Calculates standard weight for 47 NC fishes.
 
 + Species equation parameters are in a hidden data.frame: NCIFD:::wsLookup.
   + Some species have multiple equations.
     + Defaults to most useful in NC (BKT = SE BKT) or most general (MKY = both sexes).
-+ AFS-stylized references for standard weight equations are in help(standardWeight).
-+ Tested against published and known values 
++ AFS-Format references for standard weight equations are in help(standardWeight).
++ Tested against published and known values
   + NCIFD/tests/testthat/test_condition.R
 + Alias for less typing: ws()
 
@@ -265,23 +297,34 @@ standardWeight('BKT', 100, eq='B') #Hyatt and Hubert (2001) returns a NA when < 
 ws('BKT', 150) #ws() is an alias for standardWeight()
 ```
 
-## relativeWeight()
+### relativeWeight()
 Calculates relative weight of 47 NC fishes
 
 + Skip calculating _W~s~_ and get _W~r~_ directly
 + Calls standardWeight() internally
-+ Tested against published and known values 
++ Tested against published and known values
   + NCIFD/tests/testthat/test_condition.R
 + Alias for less typing: wr()
 
-```{r relativeWeight, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
-relativeWeight('BKT', 150, 32.7) #relative weight also accepts fish TL. It calls standardWeight() internally.
-relativeWeight('BKT', 150, 32.7, eq='B') #eq='B' selects Hyatt and Hubert (2001)
-wr('BKT', 150, 32.7) #wr is an alias for relativeWeight()
+```{r relativeWeight_2, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
+# make a data.frame with code rather than importing a CSV file
+spCode <- rep('BKT', 5)
+tl_mm  <- c(188, 197, 160, 170, 146)
+wt_g   <- c(74, 73, 38, 43, 28)
+ws     <- c(66.5260, 77.2344, 39.9909, 48.3721, 30.0742)
+wr     <- c(111.2346, 94.5175, 95.0217, 88.8942, 93.1030) #DG reported known Wr's
+# Build the data.frame
+dfGoodfred <- data.frame(spCode = spCode, tl_mm = tl_mm , wt_g = wt_g, ws = ws, wr = wr)
+#calculate Wr with NCIFD::relativeWeight()
+dfGoodfred$ncifd_Wr <- relativeWeight(dfGoodfred$spCode, dfGoodfred$tl_mm, dfGoodfred$wt_g)
+print(dfGoodfred)
 ```
 
-## Z2A()
-Quickly convert an instantaneous mortality rate (Z) to an annual mortality rate (A). Also, converts the standard error and bootstraps confidence intervals with the gamma distribution. Thanks to Kyle Rachels for adding the CIs.
+
+
+
+### Z2A()
+Quickly convert an instantaneous mortality rate (Z) to an annual mortality rate (A). Also, converts the standard error and bootstraps confidence intervals with the gamma distribution. Thanks to Kyle Rachels for adding the CIs!
 
 ```{r Z2A, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 Z2A(0.69) #no SE specified
@@ -289,8 +332,8 @@ Z2A(0.69, 0.1) #with SE; defaults to 95% CIs
 Z2A(0.69, 0.1, 0.99) #with SE and custom CI
 ```
 
-## ordinalDate()
-Converts dates into ordinal dates. For example, calling ordinalDate() on "2008-01-01" returns 1 and "2000-01-02" returns 2. This is useful for creating a common Jan-Dec x-axis when plotting multiple years of a time-series (Figure 3). R dates returns integers and POSIXct dates return decimal numbers. 
+### ordinalDate()
+Converts dates into ordinal dates. For example, calling ordinalDate() on "2008-01-01" returns 1 and "2000-01-02" returns 2. This is useful for creating a common Jan-Dec x-axis when plotting multiple years of a time-series (Figure 3). R dates returns integers and POSIXct dates return decimal numbers.
 ```{r ordinalDate, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 #R Date Format
 ordinalDate(as.Date(c("1/1/2000", "07/01/1999", "12/31/1970"), format = '%m/%d/%Y'))
@@ -298,9 +341,9 @@ ordinalDate(as.Date(c("1/1/2000", "07/01/1999", "12/31/1970"), format = '%m/%d/%
 dates <- c('2020-02-28 12:00:00', '2020-02-29 12:00:00', '2020-03-01 12:00:00')
 ordinalDate(as.POSIXct(dates, tz = 'GMT+5'))
 ```
-![Flows and hurricanes on the Davidson River. ordinalDate() was used to create a common (1-365) x-axis for each year before the labels (months) were overlain.](pic/allFlow.png)
+![Flows and hurricanes on the Davidson River. ordinalDate() was used to create a common (1–365) x-axis for each year before the labels (months) were overlain.](pic/allFlow.png)
 
-## Data.frame Viewing Functions
+### Data.frame Viewing Functions
 Because viewing data in R can be difficult, the package contains four functions to help.
 
 1. dfCols(); shows a summary of what is contained in the data.frame columns. This mimics how tibbles print in RStudio. The width of the last column is user specified: defaults to 40, but set to 30 in this case.
@@ -342,7 +385,7 @@ ferret(reports, c('Yow', 'creel'))
 
  + What months are Bear, Cedar Cliff, Wolf and Tanassee Stocked?
 ```{r ferret05, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
-ferret(mtsl, 'bear|cedar cliff|wolf|tanassee') #do an OR search with pipe symbol |; only works with exact=FALSE
+ferret(mtsl, 'bear|cedar cliff|wolf|tanassee') #if exact=FALSE do an OR search with pipe symbol
 ```
 
  + What data do you have from Calderwood, Santeetlah, Cheoah, and Emory reservoirs?
@@ -353,8 +396,8 @@ ferret(reports, 'Calderwood|Santeetlah|Cheoah|Emory')
  + When are Walleye normally stocked?
 ```{r ferret07, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 ferret(warmwaterStockingTrips, 'wy') #problem: finds 'wy' in notes "hwy"
-ferret(warmwaterStockingTrips, 'WY', exact = TRUE) #try exact matching only finds "WY"
+ferret(warmwaterStockingTrips, 'WY', exact = TRUE) #exact matching only finds "WY"
 ```
 
 # Conclusion
-R is exposing us (fisheries field staff) to a world of new tools which increase our ability to use and manage our own data. A Division R package is something that we can continue to build and develop to improve and share data sets internally. In addition, we can build functions to accomplish common tasks and share those in the package also. This relatively new technology allows us to handle some problems ourselves that perviously required professional IT support. Ultimately, because {NCIFD} is developed by field staff and it may help us better cooperate and collaborate laterally across geographic divisions.
+R is exposing us, the IFD field staff to a world of new tools which increase our ability to use and manage our own data. A Division R package is something that we can continue to build and develop to improve and share data sets internally. In addition, we can build functions to accomplish common tasks and share those in the package also. This relatively new technology allows us to handle some problems ourselves that perviously required professional IT support. Ultimately, because {NCIFD} is developed by field staff and it may help us better cooperate and collaborate laterally across geographic divisions.
